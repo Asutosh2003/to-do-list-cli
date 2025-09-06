@@ -1,24 +1,49 @@
+import json
+import os
+
 tasks = []
+
+
+def load_task():
+    global tasks
+    if os.path.exists("tasks.json"):
+        with open("tasks.json","r") as file:
+            try:
+                tasks = json.load(file)
+            except json.JSONDecodeError:
+                tasks = []
+    else :
+        tasks = []
+            
+def save_task():
+    with open("tasks.json","w") as f:
+        json.dump(tasks,f)
+        
+
 def show_task():
     if len(tasks)==0:
         print(" \033[93m No tasks Yet.  \033[0m")
     else:
+        # load_task()
         for items in range(1,len(tasks)+1):
             print(f"{items}. {tasks[items-1]}")
 # show_task()
 def add_task(task):
     tasks.append(task)
+    save_task()
     print("\033[97m --Task added successfully-- \033[0m")
 def delete_task(id: int):
     if 0<id<=len(tasks):
         print(f"Task {tasks[id-1]} deleted successfully")
         tasks.pop(id-1)
+        save_task()
         
     else:
         print("\033[91m Please enter a valid task id.\033[0m")
 # show_task()
 # delete_task(3)
 # show_task()
+load_task()
 while True:
     print("\033[94m\n ------ To Do List App  ------ \033[0m")
     print("\033[96m 1. View Task \033[0m")
